@@ -1,5 +1,11 @@
 # FPS_UNIDADE_3_PROJETO_FINAL
 
+## Componentes
+- Matheus Sá
+- Joseph Neiva
+- Daniel Telles
+- Victor Lima
+
 ## Projeto de Cotação Automatizada do Euro
 
 Este projeto tem como objetivo fornecer um sistema automatizado para a coleta e exibição da cotação do euro em relação ao real. Ele opera de maneira simples e eficiente, integrando ferramentas para coleta de dados, armazenamento e apresentação por meio de uma interface web.

@@ -1,6 +1,6 @@
 # FPS_UNIDADE_3_PROJETO_FINAL
 
-## Componentes
+## Componentes da Equipe
 - Matheus Sá
 - Joseph Neiva
 - Daniel Telles

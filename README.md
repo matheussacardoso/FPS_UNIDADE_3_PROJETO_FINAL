@@ -40,55 +40,163 @@ A necessidade de obter atualizações frequentes sobre a cotação do euro é re
 
 Este projeto foi pensado para ser simples, funcional e adaptável a diferentes cenários, facilitando o acesso a informações essenciais de câmbio.
 
+## Estrutura do Projeto
+
+- `/usr/lib/cgi-bin/cotacoes.sh`: Script Bash que coleta cotações, gera a página HTML e gerencia os dados.
+- `/var/www/data/cotacoes.txt`: Banco de dados simples armazenando as cotações coletadas.
+- `/var/www/data/env.log`: Log contendo as variáveis de ambiente do cron para fins de depuração.
+- `/var/www/data/script_debug.log`: Log adicional para depuração.
+- Página HTML gerada dinamicamente como saída do script.
+
 ## Guia de configuração e instalação do projeto
 
-### Agendamento Automático com Cron
+## Requisitos
 
-Esta seção descreve o processo de agendamento automático de um script para execução periódica a cada 30 minutos usando o cron. Este procedimento pode ser útil para manter as cotações ou outras informações sempre atualizadas.
+- **Dependências**:
+  - `curl`: Para realizar requisições HTTP.
+  - `jq`: Para manipular dados JSON.
+- **Servidor Apache** com suporte a scripts CGI.
 
-#### Passos para Configuração
+### Instalar as dependências:
 
-#### 1. Abrir o Crontab para Edição
-
-Abra o terminal e execute o seguinte comando para editar o arquivo `crontab`:
 ```bash
-crontab -e
+sudo apt update
+sudo apt install curl jq apache2
 ```
 
-#### 2. Adicionar a Linha de Agendamento
+Ative o módulo CGI no Apache:
 
-No editor que será aberto, adicione a seguinte linha para agendar a execução do seu script a cada 30 minutos:
 ```bash
-*/30 * * * * /caminho/para/seu/script.sh
+sudo a2enmod cgi
+sudo systemctl restart apache2
 ```
 
-##### Explicação da Sintaxe:
-- `*/30` — Executar a cada 30 minutos.
-- `*` — Qualquer hora (não restringe a hora de execução).
-- `*` — Qualquer dia do mês.
-- `*` — Qualquer mês.
-- `*` — Qualquer dia da semana.
+---
 
-Substitua `/caminho/para/seu/script.sh` pelo caminho absoluto do seu script.
+## Configuração
 
-#### 3. Salvar e Sair do Editor
+### Diretórios e Permissões
 
-Após adicionar a linha de agendamento:
-- Se estiver usando o **nano**, pressione `Ctrl + X`, depois `Y` para confirmar e `Enter` para salvar.
-- Se estiver usando o **vim**, pressione `Esc`, digite `:wq` e pressione `Enter`.
+1. **Crie o diretório de dados:**
 
-#### 4. Verificar as Tarefas Agendadas
+   ```bash
+   sudo mkdir -p /var/www/data
+   ```
 
-Para garantir que a tarefa foi agendada corretamente, execute o seguinte comando para listar as tarefas no cron:
-```bash
-crontab -l
+2. **Defina as permissões adequadas:**
+
+   ```bash
+   sudo chown www-data:www-data /var/www/data
+   sudo chmod 775 /var/www/data
+   ```
+
+3. **Configure o arquivo de banco de dados:**
+
+   ```bash
+   sudo touch /var/www/data/cotacoes.txt
+   sudo chown www-data:www-data /var/www/data/cotacoes.txt
+   sudo chmod 664 /var/www/data/cotacoes.txt
+   ```
+
+4. **Adicione o script no diretório CGI:**
+
+   ```bash
+   sudo mv cotacoes.sh /usr/lib/cgi-bin/
+   sudo chown www-data:www-data /usr/lib/cgi-bin/cotacoes.sh
+   sudo chmod 755 /usr/lib/cgi-bin/cotacoes.sh
+   ```
+
+---
+
+## Funcionamento do Script
+
+### Fluxo de Operação
+
+1. Captura as variáveis de ambiente para depuração (`env.log`).
+2. Consulta a API pública para obter a cotação do Euro (EUR) em relação ao Real (BRL).
+3. Salva os resultados em um arquivo de texto com registro da data e hora.
+4. Gera uma página HTML com as informações em formato de tabela.
+
+### Exemplo de Saída HTML
+
+```html
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotações de Moedas</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; text-align: center; }
+        table { width: 50%; margin: 20px auto; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ddd; }
+        th { background-color: #006443; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        h1 { color: #006443; }
+    </style>
+</head>
+<body>
+    <h1>Cotações de Moedas</h1>
+    <table>
+        <tr><th>Data e Hora</th><th>Cotação EUR/BRL</th></tr>
+        <tr><td>2024-12-01 10:00:00</td><td>5.23</td></tr>
+    </table>
+</body>
+</html>
 ```
 
-## Considerações Finais
+---
 
-- Caso seu script dependa de variáveis de ambiente ou tenha permissões específicas, você pode precisar defini-las dentro do script ou no próprio crontab.
-- O cron irá rodar o script a cada 30 minutos, garantindo que as cotações ou outros dados sejam mantidos atualizados de forma automática.
+## Automação com Cron
 
-Se você precisar de mais configurações ou ajustes, consulte a documentação do cron:
-- [Cron - Manual do Linux](https://man7.org/linux/man-pages/man5/crontab.5.html)
+### Esta seção descreve o processo de agendamento automático de um script para execução periódica a cada 30 minutos usando o cron. 
 
+1. **Edite o arquivo crontab do usuário:**
+
+   ```bash
+   crontab -e
+   ```
+
+2. **Adicione a seguinte linha para executar o script a cada 30 minutos:**
+
+   ```bash
+   */30 * * * * /usr/lib/cgi-bin/cotacoes.sh
+   ```
+
+3. **Verifique os logs do cron:**
+
+   ```bash
+   grep CRON /var/log/syslog
+   ```
+
+---
+
+## Solução de Problemas
+
+- **Erro de permissão**: Verifique as permissões dos arquivos e diretórios.
+- **Erro no cron**: Capture as variáveis de ambiente em `env.log` e valide.
+- **Erro na API**: Verifique a conectividade com a API usando `curl`.
+
+---
+
+## Como Testar
+
+1. **Execute o script manualmente:**
+
+   ```bash
+   /usr/lib/cgi-bin/cotacoes.sh
+   ```
+
+2. **Verifique o arquivo de cotações:**
+
+   ```bash
+   cat /var/www/data/cotacoes.txt
+   ```
+
+3. **Acesse o HTML no navegador:**
+
+   ```bash
+   http://localhost/cgi-bin/cotacoes.sh
+   ```
+
+---

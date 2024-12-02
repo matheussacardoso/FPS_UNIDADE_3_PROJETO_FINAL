@@ -10,15 +10,15 @@ Componentes da Equipe
 
 Este projeto tem como objetivo fornecer um sistema automatizado para a coleta e exibição da cotação do euro em relação ao real. Ele opera de maneira simples e eficiente, integrando ferramentas para coleta de dados, armazenamento e apresentação por meio de uma interface web.
 
-### Descrição do Produto
+Descrição do Produto
 
 O sistema monitora a cotação do euro a cada 30 minutos utilizando uma API pública, armazenando os dados em um banco de dados baseado em arquivo texto. Os registros incluem a data, hora e valor da cotação. Além disso, o projeto disponibiliza uma interface web, construída com CGI (Common Gateway Interface), para que os usuários possam acessar essas informações de forma clara e prática.
 
-### Problema Resolvido
+Problema Resolvido
 
 A necessidade de obter atualizações frequentes sobre a cotação do euro é recorrente para indivíduos e organizações que dependem de decisões financeiras baseadas em taxas de câmbio. Este sistema elimina a necessidade de consultas manuais, centralizando os dados e permitindo acesso rápido e confiável, mesmo em ambientes com recursos limitados.
 
-### Ferramentas e Tecnologias Utilizadas
+Ferramentas e Tecnologias Utilizadas
 
 - **Scripts em Bash**: Automação da coleta de dados e integração entre componentes do sistema.
 - **API Pública**: Utilização da **Economia AwesomeAPI** para obter cotações em tempo real, sem a necessidade de autenticação.
@@ -28,7 +28,7 @@ A necessidade de obter atualizações frequentes sobre a cotação do euro é re
 - **jq**: Ferramenta para processamento e extração de informações em JSON retornadas pela API.
 - **Servidor Web (Apache)**: Servidor leve configurado para suportar o CGI e disponibilizar a interface web.
 
-### Benefícios do Projeto
+Benefícios do Projeto
 
 - Automatização do processo de coleta de cotações.
 - Acesso fácil e centralizado às informações financeiras.
@@ -40,6 +40,8 @@ A necessidade de obter atualizações frequentes sobre a cotação do euro é re
 
 Este projeto foi pensado para ser simples, funcional e adaptável a diferentes cenários, facilitando o acesso a informações essenciais de câmbio.
 
+---
+
 ## Estrutura do Projeto
 
 - `/usr/lib/cgi-bin/cotacoes.sh`: Script Bash que coleta cotações, gera a página HTML e gerencia os dados.
@@ -47,6 +49,8 @@ Este projeto foi pensado para ser simples, funcional e adaptável a diferentes c
 - `/var/www/data/env.log`: Log contendo as variáveis de ambiente do cron para fins de depuração.
 - `/var/www/data/script_debug.log`: Log adicional para depuração.
 - Página HTML gerada dinamicamente como saída do script.
+
+---
 
 ## Guia de configuração e instalação do projeto
 

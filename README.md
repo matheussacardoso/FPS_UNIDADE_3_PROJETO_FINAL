@@ -6,6 +6,8 @@ Componentes da Equipe
 - Daniel Telles
 - Victor Lima
 
+https://github.com/user-attachments/assets/5bf1aa66-ed18-4b2b-8166-c9f58829078d
+
 ## Projeto de Cotação Automatizada do Euro
 
 Este projeto tem como objetivo fornecer um sistema automatizado para a coleta e exibição da cotação do euro em relação ao real. Ele opera de maneira simples e eficiente, integrando ferramentas para coleta de dados, armazenamento e apresentação por meio de uma interface web.
